@@ -199,6 +199,16 @@ final class BedrockBlockActions {
             }
             // Handled in BedrockInventoryTransactionTranslator
             case STOP_BREAK -> {
+                GeyserLocation playerPos = session.getPlayerEntity().getPosition();
+BlockState belowBlock = session.getGeyserWorldManager().getBlockAt(session, playerPos.toInt().sub(0, 1, 0));
+
+if (belowBlock.isAir()) {
+    // Send a slight downward movement to force server to realize the player is falling
+    Vector3f currentPos = session.getPlayerEntity().getPosition().toFloat();
+    Vector3f newPos = Vector3f.from(currentPos.getX(), currentPos.getY() - 0.05f, currentPos.getZ());
+
+    session.sendMovement(newPos, session.getPlayerEntity().getRotation(), true);
+}
             }
         }
     }
